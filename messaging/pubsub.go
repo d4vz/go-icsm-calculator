@@ -1,5 +1,7 @@
 package messaging
 
+import "errors"
+
 type PubSub[T any] struct {
 	queue chan T
 }
@@ -10,8 +12,13 @@ func NewPubSub[T any](bufferSize int) *PubSub[T] {
 	}
 }
 
-func (p *PubSub[T]) Publish(message T) {
-	p.queue <- message
+func (p *PubSub[T]) Publish(message T) error {
+	select {
+	case p.queue <- message:
+		return nil
+	default:
+		return errors.New("queue is full")
+	}
 }
 
 func (p *PubSub[T]) Subscribe() <-chan T {
