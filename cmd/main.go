@@ -24,7 +24,7 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		for range int(10) {
+		for range 10 {
 			pubSub.Publish(&sell.Sell{
 				ProductValue:  random.RandomFloat64(100, 1000),
 				UfOrigin:      random.RandomInArray(ufs),
